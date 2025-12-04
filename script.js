@@ -190,3 +190,37 @@ function injectFooter() {
     }
 }
 // Simple & Bulletproof Mobile Menu
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const toggle = document.getElementById('nav-toggle');
+    const menu = document.getElementById('nav-links');
+
+    if (toggle && menu) {
+        toggle.onclick = function(e) {
+            // This prevents the click from hitting things behind the button
+            e.stopPropagation(); 
+            toggle.classList.toggle('active');
+            menu.classList.toggle('active');
+        };
+
+        // Close menu when clicking any link inside it
+        const links = document.querySelectorAll('.nav-links a');
+        links.forEach(function(link) {
+            link.onclick = function() {
+                toggle.classList.remove('active');
+                menu.classList.remove('active');
+            };
+        });
+
+        // Close menu when clicking OUTSIDE the menu
+        document.addEventListener('click', function(event) {
+            const isClickInside = menu.contains(event.target) || toggle.contains(event.target);
+            if (!isClickInside) {
+                toggle.classList.remove('active');
+                menu.classList.remove('active');
+            }
+        });
+    }
+});
+
