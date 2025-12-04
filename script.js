@@ -189,3 +189,4 @@ function injectFooter() {
         `;
     }
 }
+// Simple & Bulletproof Mobile Menu
