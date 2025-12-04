@@ -1,6 +1,9 @@
+/* =========================================
+   1. GENERAL RESET & FONTS
+   ========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@100..900&family=Yaldevi:wght@200..700&display=swap');
 
-/* --- General Reset & Fonts --- */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@100..900&family=Yaldevi:wght@200..700&display=swap');* {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -15,14 +18,16 @@ body {
     overflow-x: hidden;
 }
 
-/* --- 1. Header (Standard) --- */
-/* --- ADD THIS NEW CODE --- */
+/* =========================================
+   2. HEADER BANNER
+   ========================================= */
 .header-banner-container {
     width: 100%;
     background-color: #004d66; 
     line-height: 0; /* Removes gap below image */
     z-index: 10;
     position: relative;
+    margin-bottom: 0;
 }
 
 .actual-header-image {
@@ -30,27 +35,43 @@ body {
     height: auto; /* Keeps aspect ratio */
     display: block; 
 }
-/* --- 2. Navigation (Standard) --- */
 
+/* =========================================
+   3. NAVIGATION (FIXED: Left/Right Split)
+   ========================================= */
 
-/* --- In style.css --- */
-
-nav {
-    background-color: #004d66;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 40px;
-    height: 60px;
-    position: sticky; /* Keeps it sticky */
+/* The Main Sticky Bar */
+.main-nav {
+    position: sticky;
     top: 0;
-    
-    /* CHANGE 1: Increase Z-Index to be the highest item on page */
-    z-index: 2000; 
-    
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    background-color: #002633; /* Dark Blue */
+    border-top: 3px solid #00d2ff;
+    border-bottom: 3px solid #00d2ff;
+    z-index: 9999;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    height: 70px; /* Fixed height for stability */
+    margin-top: 0;
 }
-.dropdown { position: relative; display: inline-block; }
+
+/* The Flex Container - THIS DOES THE SPLIT */
+.nav-container {
+    display: flex;
+    justify-content: space-between; /* Pushes Left and Right apart */
+    align-items: center;
+    max-width: 1600px;
+    height: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* --- LEFT SIDE (Essential Links) --- */
+.nav-left {
+    flex: 0 0 auto; /* Prevents shrinking */
+    display: flex;
+    align-items: center;
+}
+
+/* Red Dropdown Button */
 .dropbtn {
     background-color: #ff4d4d;
     color: white;
@@ -58,20 +79,28 @@ nav {
     font-size: 14px;
     border: none;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 6px;
     font-weight: bold;
+    box-shadow: 0 4px 10px rgba(255, 77, 77, 0.3);
     transition: background 0.3s;
+    white-space: nowrap;
 }
+
 .dropbtn:hover { background-color: #e60000; }
+
+/* Dropdown Logic */
+.dropdown { position: relative; display: inline-block; }
 .dropdown-content {
     display: none;
     position: absolute;
     background-color: #ffffff;
-    min-width: 220px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
+    min-width: 240px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.3);
+    z-index: 10000;
     border-radius: 4px;
-    top: 100%; left: 0;
+    top: 100%; 
+    left: 0;
+    margin-top: 5px;
 }
 .dropdown-content a {
     color: #333;
@@ -81,30 +110,117 @@ nav {
     font-size: 14px;
     border-bottom: 1px solid #eee;
 }
-.dropdown-content a:hover { background-color: #f1f1f1; color: #004d66; padding-left: 20px; transition: 0.2s; }
-.dropdown:hover .dropdown-content { display: block; }
-.nav-links { list-style: none; display: flex; align-items: center; }
-.nav-links li { margin-left: 5px; }
-/* --- Active Page Highlight --- */
-.nav-links a.active {
-    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white background */
-    font-weight: bold;       /* Makes text thicker */
-    border-radius: 4px;      /* Rounds the corners slightly */
-    color: #66d9ff;          /* Optional: Changes text color to light blue */
-    border-bottom: 2px solid #66d9ff; /* Optional: Adds a line under the link */
+.dropdown-content a:hover { 
+    background-color: #f1f1f1; 
+    color: #004d66; 
+    padding-left: 20px; 
+    transition: 0.2s; 
 }
+.dropdown:hover .dropdown-content { display: block; }
+
+
+/* --- RIGHT SIDE (Menu Links + Hamburger) --- */
+.nav-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Aligns content to the right */
+    gap: 20px;
+}
+
+/* The UL Menu List */
+.nav-links {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 15px; /* Space between menu items */
+}
+
 .nav-links a {
     color: white;
     text-decoration: none;
-    padding: 10px 15px;
+    padding: 8px 14px;
     font-size: 15px;
     font-weight: 500;
-    border-radius: 4px;
+    border-radius: 6px;
     transition: all 0.3s ease;
+    white-space: nowrap;
 }
-.nav-links a:hover { background-color: rgba(255, 255, 255, 0.15); color: #66d9ff; }
 
-/* --- 3. Main Content --- */
+.nav-links a:hover, .nav-links a.active {
+    background-color: rgba(0, 210, 255, 0.2); 
+    color: #00d2ff;
+}
+
+/* Hamburger Button (Hidden on Desktop) */
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+.hamburger-line {
+    display: block;
+    width: 28px;
+    height: 3px;
+    background: #00d2ff;
+    margin: 6px 0;
+    border-radius: 3px;
+    transition: 0.3s;
+}
+
+/* --- MOBILE RESPONSIVENESS FOR NAV --- */
+@media (max-width: 900px) {
+    /* Show Hamburger */
+    .nav-toggle { display: block; }
+
+    /* Hide Desktop Links initially */
+    .nav-links {
+        position: absolute;
+        top: 70px; /* Height of header */
+        left: 0;
+        width: 100%;
+        background-color: #002633;
+        flex-direction: column;
+        gap: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease-in-out;
+        border-bottom: 2px solid #00d2ff;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    }
+
+    .nav-links.active {
+        max-height: 800px; /* Expand menu */
+    }
+
+    .nav-links li {
+        width: 100%;
+        text-align: center;
+    }
+
+    .nav-links a {
+        display: block;
+        padding: 15px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Hamburger Animation */
+    .nav-toggle.active .hamburger-line:nth-child(1) { transform: rotate(45deg) translate(8px, 8px); }
+    .nav-toggle.active .hamburger-line:nth-child(2) { opacity: 0; }
+    .nav-toggle.active .hamburger-line:nth-child(3) { transform: rotate(-45deg) translate(8px, -8px); }
+    
+    /* Make dropdown click-friendly on mobile */
+    .dropdown:hover .dropdown-content,
+    .dropdown.active .dropdown-content {
+        display: block;
+    }
+}
+
+/* =========================================
+   4. MAIN CONTENT
+   ========================================= */
 main {
     flex: 1;
     position: relative;
@@ -114,7 +230,7 @@ main {
     justify-content: center;
     padding: 40px;
     overflow: hidden;
-    background: linear-gradient(to bottom, #00111a, #00334d); /* Moved background here */
+    background: linear-gradient(to bottom, #00111a, #00334d); 
 }
 
 /* The Water Canvas */
@@ -125,7 +241,6 @@ main {
     width: 100%;
     height: 100%;
     z-index: 1;
-    /* Canvas is now transparent to let main background show through */
 }
 
 .placeholder-content {
@@ -135,6 +250,7 @@ main {
     border-radius: 8px;
     color: #555;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    z-index: 2; /* Ensure it sits above canvas */
 }
 
 .content-wrapper {
@@ -176,7 +292,7 @@ main {
     color: white;
     transition: transform 0.3s, background 0.3s;
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    cursor: pointer; /* Indicates Clickable */
+    cursor: pointer;
 }
 
 .developer-card:hover {
@@ -204,16 +320,18 @@ main {
     margin-top: 10px;
 }
 
-/* --- Modal (Popup) Styles --- */
+/* =========================================
+   5. MODAL (POPUP) STYLES
+   ========================================= */
 .modal {
-    display: none; /* Hidden by default */
+    display: none;
     position: fixed;
-    z-index: 2000;
+    z-index: 10000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.85); /* Black w/ opacity */
+    background-color: rgba(0,0,0,0.85);
     justify-content: center;
     align-items: center;
     backdrop-filter: blur(5px);
@@ -221,7 +339,7 @@ main {
 
 .modal-content {
     background: linear-gradient(145deg, #1a1a1a, #222);
-    padding: 2px; /* Border effect */
+    padding: 2px;
     border-radius: 15px;
     position: relative;
     max-width: 400px;
@@ -264,11 +382,11 @@ main {
     z-index: 10;
 }
 
-.close-btn:hover {
-    color: #fff;
-}
+.close-btn:hover { color: #fff; }
 
-/* --- 4. Footer (Standard) --- */
+/* =========================================
+   6. FOOTER
+   ========================================= */
 footer {
     background-color: #0d0d0d;
     color: #f5f5dc;
@@ -277,6 +395,7 @@ footer {
     z-index: 10;
     position: relative;
 }
+
 .footer-container {
     display: flex;
     justify-content: space-around;
@@ -286,6 +405,7 @@ footer {
     padding-bottom: 30px;
     border-bottom: 1px solid #333;
 }
+
 .footer-section { flex: 1; min-width: 250px; margin: 15px; }
 .footer-section h3 {
     color: #fff; text-transform: uppercase; font-size: 1.1rem; letter-spacing: 1px; margin-bottom: 20px; position: relative;
@@ -295,37 +415,30 @@ footer {
 .emergency-number { font-weight: bold; color: #ff4d4d; font-size: 1.1rem; }
 .copyright { text-align: center; padding-top: 20px; font-size: 0.85rem; color: #777; }
 
-.orientation-hint {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: rgba(255,255,255,0.4);
-    font-size: 0.8rem;
-    pointer-events: none;
-    z-index: 5;
-    display: none;
-}
-/* --- LANGUAGE POPUP STYLES --- */
-/* --- 1. POPUP STYLES --- */
-/* --- style.css --- */
+/* =========================================
+   7. LANGUAGE POPUP & LOGIC
+   ========================================= */
 
-/* 1. The Full Screen Overlay */
+/* The Full Screen Overlay */
+/* The Full Screen Overlay */
 .lang-modal {
-    position: fixed;       /* Stays in place when scrolling */
-    top: 0;
+    position: fixed;
+    top: 0; 
     left: 0;
-    width: 100%;
+    width: 100%; 
     height: 100%;
-    background-color: rgba(0,0,0,0.9); /* Dark background */
-    z-index: 9999;         /* Sits on top of EVERYTHING */
-    display: flex;         /* Centers the box */
+    background-color: rgba(0,0,0,0.9);
+    
+    /* NUCLEAR OPTION: Extremely high number + !important to force it */
+    z-index: 999999 !important; 
+    
+    display: flex;
     justify-content: center;
     align-items: center;
-    backdrop-filter: blur(5px); /* Blurs the website behind it */
+    backdrop-filter: blur(5px);
 }
 
-/* 2. The Center Box */
+/* The Center Box */
 .lang-content {
     background: linear-gradient(135deg, #004d66, #002633);
     padding: 40px;
@@ -339,7 +452,7 @@ footer {
     animation: fadeIn 0.5s ease;
 }
 
-/* 3. The Buttons */
+/* The Buttons */
 .lang-btn {
     display: block;
     width: 100%;
@@ -355,69 +468,49 @@ footer {
 
 .lang-btn:hover { transform: scale(1.02); }
 .btn-en { background: #fff; color: #333; }
-.btn-si { background: #ff4d4d; color: #fff; }
+.btn-si { background: #0a01ae; color: #15b9ff; }
+.btn-ta { background: #0ebfff; color: #2603a4; }
 
-/* Animation for smooth entry */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* 4. Language Hiding Logic (Required) */
-/* --- 3-WAY LANGUAGE LOGIC --- */
-
+/* 3-WAY LANGUAGE HIDING LOGIC */
 /* 1. Default (English): Hide Sinhala & Tamil */
 body:not(.sinhala-mode):not(.tamil-mode) .lang-si,
 body:not(.sinhala-mode):not(.tamil-mode) .lang-ta {
     display: none !important;
 }
-
 /* 2. Sinhala Mode: Hide English & Tamil */
 body.sinhala-mode .lang-en,
 body.sinhala-mode .lang-ta {
     display: none !important;
 }
-
 /* 3. Tamil Mode: Hide English & Sinhala */
 body.tamil-mode .lang-en,
 body.tamil-mode .lang-si {
     display: none !important;
 }
 
-/* Tamil Font Support */
+/* Font Support */
 .lang-ta {
     font-family: 'Latha', 'Mukta Malar', sans-serif;
-    font-size: 0.85em; /* Scaled down to 85% of normal size */
+    font-size: 0.85em;
     line-height: 1.2;
 }
-
-/* Sinhala Font Support */
 .lang-si {
-    /* Uses Yaldevi first. If it fails, uses Noto Sans. */
     font-family: 'Yaldevi', 'Noto Sans Sinhala', sans-serif;
-    
-    /* Bigger size as requested */
     font-size: 1.25em; 
-    
-    /* Slightly thicker for better readability */
     font-weight: 500; 
-    
-    /* Better spacing */
     line-height: 1.3;
 }
 
-/* Button Colors for Popup */
-.btn-en { background: #fff; color: #333; }
-.btn-si { background: #0a01ae; color: #15b9ff; }
-.btn-ta { background: #0ebfff; color: #2603a4; }
+/* =========================================
+   8. DATA MAP STYLES
+   ========================================= */
 
-
-
-
-
-/* --- DATA MAP STYLES --- */
-
-/* 1. Action Buttons Container */
+/* Action Buttons Container */
 .map-actions {
     display: flex;
     justify-content: center;
@@ -427,7 +520,7 @@ body.tamil-mode .lang-si {
     background: #4cdbff;
 }
 
-/* 2. The Buttons */
+/* The Buttons */
 .action-btn {
     text-decoration: none;
     padding: 12px 25px;
@@ -445,37 +538,26 @@ body.tamil-mode .lang-si {
     box-shadow: 0 6px 12px rgba(0,0,0,0.3);
 }
 
-/* 3. Specific Colors */
 .btn-contributor { background-color: #28a745; } /* Green */
 .btn-distributor { background-color: #007bff; } /* Blue */
 .btn-victim { background-color: #dc3545; }      /* Red */
 
-/* 4. The Map Container */
-/* 4. The Map Container */
+/* The Map Container */
 #map {
     height: 600px;
-    
-    /* WIDTH CHANGE: */
-    width: 80%;           /* Occupies 80% of screen */
-    margin: 20px auto;    /* 'auto' centers it horizontally. 20px adds space top/bottom */
-    
+    width: 80%;
+    margin: 20px auto;
     z-index: 1;
-    
-    /* Visual upgrades for a centered box */
     border: 4px solid #004d66; 
-    border-radius: 10px;  /* Softens the corners */
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15); /* Adds a shadow to make it 'pop' */
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
-/* Mobile Adjustment */
+/* Mobile Adjustment for Map */
 @media (max-width: 768px) {
     #map { 
         height: 450px; 
-        width: 90%; /* On mobile, we make it slightly wider (90%) but still keep edges free */
+        width: 90%;
     }
     .map-actions { flex-direction: column; align-items: center; }
 }
-
-
-
-
