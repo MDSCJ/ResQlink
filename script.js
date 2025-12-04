@@ -1,10 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
     
-    // 1. CHECK SAVED LANGUAGE
+    // =========================================================
+    // 1. LANGUAGE & FOOTER SETUP (Originally "Top Code")
+    // =========================================================
+    
+    // 1.1 CHECK SAVED LANGUAGE
     const currentLang = localStorage.getItem('siteLang');
     const body = document.body;
 
-    // 2. APPLY LANGUAGE MODE
+    // 1.2 APPLY LANGUAGE MODE
     if (currentLang === 'si') {
         body.classList.add('sinhala-mode');
         body.classList.remove('tamil-mode');
@@ -15,13 +19,74 @@ document.addEventListener('DOMContentLoaded', function() {
         body.classList.remove('sinhala-mode');
         body.classList.remove('tamil-mode');
     } else {
-        // 3. IF NEW USER: Show Popup
+        // 1.3 IF NEW USER: Show Popup
         createPopup();
     }
 
-    // 4. INJECT FOOTER
+    // 1.4 INJECT FOOTER
     injectFooter();
+
+
+    // =========================================================
+    // 2. MOBILE MENU LOGIC (Originally "Bottom Code")
+    // =========================================================
+    
+    const toggle = document.getElementById('nav-toggle');
+    const menu = document.getElementById('nav-links');
+
+    if (toggle && menu) {
+        
+        // A. Toggle Menu Open/Close
+        toggle.onclick = function(e) {
+            // This prevents the click from hitting things behind the button
+            e.stopPropagation(); 
+            toggle.classList.toggle('active');
+            menu.classList.toggle('active');
+        };
+
+        // B. Close menu when clicking any link inside it
+        const links = document.querySelectorAll('.nav-links a');
+        links.forEach(function(link) {
+            // --- THE CRITICAL FIX ---
+            // We use 'addEventListener' instead of 'onclick ='
+            // This ensures we DO NOT delete the specific code inside the "Lang" button.
+            link.addEventListener('click', function() {
+                toggle.classList.remove('active');
+                menu.classList.remove('active');
+            });
+        });
+
+        // C. Close menu when clicking OUTSIDE the menu
+        document.addEventListener('click', function(event) {
+            const isClickInside = menu.contains(event.target) || toggle.contains(event.target);
+            if (!isClickInside) {
+                toggle.classList.remove('active');
+                menu.classList.remove('active');
+            }
+        });
+    }
+
+    // =========================================================
+    // 3. ESSENTIAL LINKS DROPDOWN (Mobile Fix)
+    // =========================================================
+    const dropbtn = document.querySelector('.dropbtn');
+    const dropdown = document.querySelector('.dropdown');
+    
+    if (dropbtn && window.innerWidth <= 900) {
+        dropbtn.onclick = (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('active');
+        };
+        document.addEventListener('click', () => {
+            dropdown.classList.remove('active');
+        });
+    }
 });
+
+
+// =========================================================
+// 4. HELPER FUNCTIONS (Must be outside DOMContentLoaded)
+// =========================================================
 
 // --- CREATE POPUP ---
 function createPopup() {
@@ -33,7 +98,7 @@ function createPopup() {
         <div class="lang-content">
             <h2 style="margin-bottom:20px;">
                 Select Language<br>
-                <span style="font-family:  'Noto Sans Sinhala', sans-serif; font-size:0.8em; color:#ccc;">භාෂාව තෝරන්න </span><br>
+                <span style="font-family: 'Noto Sans Sinhala', sans-serif; font-size:0.8em; color:#ccc;">භාෂාව තෝරන්න </span><br>
                 <span style="font-size:0.8em; color:#ccc;">மொழியைத் தேர்ந்தெடுக்கவும்</span>
             </h2>
             <button class="lang-btn btn-en" onclick="setLanguage('en')">English</button>
@@ -189,38 +254,3 @@ function injectFooter() {
         `;
     }
 }
-// Simple & Bulletproof Mobile Menu
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    const toggle = document.getElementById('nav-toggle');
-    const menu = document.getElementById('nav-links');
-
-    if (toggle && menu) {
-        toggle.onclick = function(e) {
-            // This prevents the click from hitting things behind the button
-            e.stopPropagation(); 
-            toggle.classList.toggle('active');
-            menu.classList.toggle('active');
-        };
-
-        // Close menu when clicking any link inside it
-        const links = document.querySelectorAll('.nav-links a');
-        links.forEach(function(link) {
-            link.onclick = function() {
-                toggle.classList.remove('active');
-                menu.classList.remove('active');
-            };
-        });
-
-        // Close menu when clicking OUTSIDE the menu
-        document.addEventListener('click', function(event) {
-            const isClickInside = menu.contains(event.target) || toggle.contains(event.target);
-            if (!isClickInside) {
-                toggle.classList.remove('active');
-                menu.classList.remove('active');
-            }
-        });
-    }
-});
-
