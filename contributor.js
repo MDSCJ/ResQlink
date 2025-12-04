@@ -1,7 +1,77 @@
-/* --- contributor.js (FINAL FIXED VERSION) --- */
+/* --- contributor.js (FINAL COMPLETE VERSION) --- */
 
 document.addEventListener('DOMContentLoaded', function() {
+
+    // =========================================================
+    // 0. GLOBAL NAVIGATION LOGIC (HAMBURGER, LANG, DROPDOWN)
+    // =========================================================
     
+    // --- A. Language Logic ---
+    const currentLang = localStorage.getItem('siteLang');
+    const body = document.body;
+
+    if (currentLang === 'si') {
+        body.classList.add('sinhala-mode');
+        body.classList.remove('tamil-mode');
+    } else if (currentLang === 'ta') {
+        body.classList.add('tamil-mode');
+        body.classList.remove('sinhala-mode');
+    } else if (currentLang === 'en') {
+        body.classList.remove('sinhala-mode');
+        body.classList.remove('tamil-mode');
+    } else {
+        createPopup(); // Show popup if new user
+    }
+
+    // --- B. Hamburger Menu Logic ---
+    const toggle = document.getElementById('nav-toggle');
+    const menu = document.getElementById('nav-links');
+
+    if (toggle && menu) {
+        // Toggle Open/Close
+        toggle.onclick = function(e) {
+            e.stopPropagation(); 
+            toggle.classList.toggle('active');
+            menu.classList.toggle('active');
+        };
+
+        // Close when clicking any link
+        const links = document.querySelectorAll('.nav-links a');
+        links.forEach(function(link) {
+            link.addEventListener('click', function() {
+                toggle.classList.remove('active');
+                menu.classList.remove('active');
+            });
+        });
+
+        // Close when clicking outside
+        document.addEventListener('click', function(event) {
+            const isClickInside = menu.contains(event.target) || toggle.contains(event.target);
+            if (!isClickInside) {
+                toggle.classList.remove('active');
+                menu.classList.remove('active');
+            }
+        });
+    }
+
+    // --- C. Essential Links Dropdown (Mobile Fix) ---
+    const dropbtn = document.querySelector('.dropbtn');
+    const dropdown = document.querySelector('.dropdown');
+    
+    if (dropbtn && window.innerWidth <= 900) {
+        dropbtn.onclick = (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('active');
+        };
+        document.addEventListener('click', () => {
+            dropdown.classList.remove('active');
+        });
+    }
+    
+    // --- D. Inject Footer (Specific for Contributor Page) ---
+    injectFooter();
+
+
     // =========================================
     // 1. SIDEBAR TAB SWITCHING LOGIC
     // =========================================
@@ -24,159 +94,166 @@ document.addEventListener('DOMContentLoaded', function() {
             if (targetSection) {
                 targetSection.classList.add('active-section');
             }
+            
+            // Mobile: Close menu if open
+            if(menu) menu.classList.remove('active');
+            if(toggle) toggle.classList.remove('active');
         });
     });
 
     // =========================================
-// 2. SUPPLIER DETAILS (PROFILE & GALLERY) - FULLY FIXED
-// =========================================
+    // 2. SUPPLIER DETAILS (PROFILE & GALLERY)
+    // =========================================
 
-const viewMode = document.getElementById('supplier-view-mode');
-const editMode = document.getElementById('supplier-edit-mode');
-const btnEnableEdit = document.getElementById('btn-enable-edit');
-const btnCancelEdit = document.getElementById('btn-cancel-edit');
-const supplierForm = document.getElementById('supplier-form');
+    const viewMode = document.getElementById('supplier-view-mode');
+    const editMode = document.getElementById('supplier-edit-mode');
+    const btnEnableEdit = document.getElementById('btn-enable-edit');
+    const btnCancelEdit = document.getElementById('btn-cancel-edit');
+    const supplierForm = document.getElementById('supplier-form');
 
-const displayName = document.getElementById('display-name');
-const displayDesc = document.getElementById('display-desc');
-const displayProfile = document.getElementById('display-profile-pic');
-const displayGallery = document.getElementById('display-gallery');
+    const displayName = document.getElementById('display-name');
+    const displayDesc = document.getElementById('display-desc');
+    const displayProfile = document.getElementById('display-profile-pic');
+    const displayGallery = document.getElementById('display-gallery');
 
-const editName = document.getElementById('edit-name');
-const editDesc = document.getElementById('edit-desc');
-const editProfileUpload = document.getElementById('edit-profile-upload');
-const editGalleryUpload = document.getElementById('edit-gallery-upload');
+    const editName = document.getElementById('edit-name');
+    const editDesc = document.getElementById('edit-desc');
+    const editProfileUpload = document.getElementById('edit-profile-upload');
+    const editGalleryUpload = document.getElementById('edit-gallery-upload');
 
-// Load saved data from localStorage on page load
-function loadSupplierData() {
-    const saved = JSON.parse(localStorage.getItem('floodSupplierProfile')) || {};
-    
-    if (saved.name) displayName.textContent = saved.name;
-    if (saved.desc) displayDesc.textContent = saved.desc;
-    if (saved.profilePic) displayProfile.src = saved.profilePic;
-    if (saved.gallery && Array.isArray(saved.gallery)) {
-        displayGallery.innerHTML = '';
-        saved.gallery.forEach(src => {
-            const item = document.createElement('div');
-            item.className = 'gallery-item';
-            item.innerHTML = `
-                <img src="${src}" alt="Work">
-                <button class="delete-btn" title="Remove Photo">&times;</button>
-            `;
-            displayGallery.appendChild(item);
+    // Load saved data from localStorage on page load
+    function loadSupplierData() {
+        const saved = JSON.parse(localStorage.getItem('floodSupplierProfile')) || {};
+        
+        if (saved.name && displayName) displayName.textContent = saved.name;
+        if (saved.desc && displayDesc) displayDesc.textContent = saved.desc;
+        if (saved.profilePic && displayProfile) displayProfile.src = saved.profilePic;
+        if (saved.gallery && Array.isArray(saved.gallery) && displayGallery) {
+            displayGallery.innerHTML = '';
+            saved.gallery.forEach(src => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.innerHTML = `
+                    <img src="${src}" alt="Work">
+                    <button class="delete-btn" title="Remove Photo">&times;</button>
+                `;
+                displayGallery.appendChild(item);
+            });
+        }
+    }
+
+    // Save supplier profile to localStorage
+    function saveSupplierData() {
+        if (!displayGallery) return;
+        const profileData = {
+            name: displayName.textContent,
+            desc: displayDesc.textContent,
+            profilePic: displayProfile.src,
+            gallery: Array.from(displayGallery.querySelectorAll('img')).map(img => img.src)
+        };
+        localStorage.setItem('floodSupplierProfile', JSON.stringify(profileData));
+    }
+
+    // Initialize on load
+    loadSupplierData();
+
+    // Toggle to Edit Mode
+    if (btnEnableEdit) {
+        btnEnableEdit.addEventListener('click', function() {
+            viewMode.classList.add('hidden-mode');
+            editMode.classList.remove('hidden-mode');
+
+            // Pre-fill form
+            editName.value = displayName.textContent;
+            editDesc.value = displayDesc.textContent;
         });
     }
-}
 
-// Save supplier profile to localStorage
-function saveSupplierData() {
-    const profileData = {
-        name: displayName.textContent,
-        desc: displayDesc.textContent,
-        profilePic: displayProfile.src,
-        gallery: Array.from(displayGallery.querySelectorAll('img')).map(img => img.src)
-    };
-    localStorage.setItem('floodSupplierProfile', JSON.stringify(profileData));
-}
-
-// Initialize on load
-loadSupplierData();
-
-// Toggle to Edit Mode
-if (btnEnableEdit) {
-    btnEnableEdit.addEventListener('click', function() {
-        viewMode.classList.add('hidden-mode');
-        editMode.classList.remove('hidden-mode');
-
-        // Pre-fill form
-        editName.value = displayName.textContent;
-        editDesc.value = displayDesc.textContent;
-    });
-}
-
-// Cancel Edit
-if (btnCancelEdit) {
-    btnCancelEdit.addEventListener('click', function() {
-        editMode.classList.add('hidden-mode');
-        viewMode.classList.remove('hidden-mode');
-    });
-}
-
-// Delete Gallery Image
-displayGallery.addEventListener('click', function(e) {
-    if (e.target.classList.contains('delete-btn')) {
-        if (confirm("Remove this photo from gallery?")) {
-            e.target.closest('.gallery-item').remove();
-        }
-    }
-});
-
-// SAVE CHANGES - FULLY FIXED
-if (supplierForm) {
-    supplierForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        // 1. Update Name & Description
-        const newName = editName.value.trim() || "Organization Name";
-        const newDesc = editDesc.value.trim() || "No description provided.";
-
-        displayName.textContent = newName;
-        displayDesc.textContent = newDesc;
-
-        // 2. Update Profile Picture
-        if (editProfileUpload.files && editProfileUpload.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-                displayProfile.src = ev.target.result;
-                // After all updates, save
-                saveAfterUpdates();
-            };
-            reader.readAsDataURL(editProfileUpload.files[0]);
-        } else {
-            saveAfterUpdates();
-        }
-
-        // Helper to finalize save
-        function saveAfterUpdates() {
-            // 3. Add New Gallery Images
-            if (editGalleryUpload.files && editGalleryUpload.files.length > 0) {
-                let pending = editGalleryUpload.files.length;
-                Array.from(editGalleryUpload.files).forEach(file => {
-                    const reader = new FileReader();
-                    reader.onload = function(ev) {
-                        const newItem = document.createElement('div');
-                        newItem.className = 'gallery-item';
-                        newItem.innerHTML = `
-                            <img src="${ev.target.result}" alt="Work">
-                            <button class="delete-btn" title="Remove Photo">&times;</button>
-                        `;
-                        displayGallery.prepend(newItem); // Newest on top
-                        pending--;
-                        if (pending === 0) finalizeSave();
-                    };
-                    reader.readAsDataURL(file);
-                });
-            } else {
-                finalizeSave();
-            }
-        }
-
-        function finalizeSave() {
-            saveSupplierData(); // Save everything to localStorage
+    // Cancel Edit
+    if (btnCancelEdit) {
+        btnCancelEdit.addEventListener('click', function() {
             editMode.classList.add('hidden-mode');
             viewMode.classList.remove('hidden-mode');
+        });
+    }
 
-            // Reset file inputs
-            editProfileUpload.value = '';
-            editGalleryUpload.value = '';
+    // Delete Gallery Image
+    if (displayGallery) {
+        displayGallery.addEventListener('click', function(e) {
+            if (e.target.classList.contains('delete-btn')) {
+                if (confirm("Remove this photo from gallery?")) {
+                    e.target.closest('.gallery-item').remove();
+                }
+            }
+        });
+    }
 
-            alert("✅ Profile updated successfully!");
-        }
-    });
-}
+    // SAVE CHANGES
+    if (supplierForm) {
+        supplierForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // 1. Update Name & Description
+            const newName = editName.value.trim() || "Organization Name";
+            const newDesc = editDesc.value.trim() || "No description provided.";
+
+            displayName.textContent = newName;
+            displayDesc.textContent = newDesc;
+
+            // 2. Update Profile Picture
+            if (editProfileUpload.files && editProfileUpload.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    displayProfile.src = ev.target.result;
+                    // After all updates, save
+                    saveAfterUpdates();
+                };
+                reader.readAsDataURL(editProfileUpload.files[0]);
+            } else {
+                saveAfterUpdates();
+            }
+
+            // Helper to finalize save
+            function saveAfterUpdates() {
+                // 3. Add New Gallery Images
+                if (editGalleryUpload.files && editGalleryUpload.files.length > 0) {
+                    let pending = editGalleryUpload.files.length;
+                    Array.from(editGalleryUpload.files).forEach(file => {
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            const newItem = document.createElement('div');
+                            newItem.className = 'gallery-item';
+                            newItem.innerHTML = `
+                                <img src="${ev.target.result}" alt="Work">
+                                <button class="delete-btn" title="Remove Photo">&times;</button>
+                            `;
+                            displayGallery.prepend(newItem); // Newest on top
+                            pending--;
+                            if (pending === 0) finalizeSave();
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                } else {
+                    finalizeSave();
+                }
+            }
+
+            function finalizeSave() {
+                saveSupplierData(); // Save everything to localStorage
+                editMode.classList.add('hidden-mode');
+                viewMode.classList.remove('hidden-mode');
+
+                // Reset file inputs
+                editProfileUpload.value = '';
+                editGalleryUpload.value = '';
+
+                alert("✅ Profile updated successfully!");
+            }
+        });
+    }
 
     // =========================================
-    // 3. SUPPLY BATCH & HISTORY (FIXED)
+    // 3. SUPPLY BATCH & HISTORY
     // =========================================
 
     const batchForm = document.getElementById('supply-batch-form');
@@ -256,7 +333,7 @@ if (supplierForm) {
         });
     }
 
-    // --- C. Submit Logic (Fixed for new Structure) ---
+    // --- C. Submit Logic ---
     if (batchForm) {
         batchForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -278,7 +355,6 @@ if (supplierForm) {
                 const index = supplyData.findIndex(b => b.id === editingBatchId);
                 if (index !== -1) {
                     supplyData[index].items = items;
-                    // Note: We don't change ID or Date on update
                 }
                 editingBatchId = null;
             } else {
@@ -305,7 +381,7 @@ if (supplierForm) {
         });
     }
 
-    // --- D. Render History (Categorized View) ---
+    // --- D. Render History ---
     function renderSupplyHistory() {
         if (!historyContainer) return;
         historyContainer.innerHTML = '';
@@ -346,7 +422,6 @@ if (supplierForm) {
                 // Create Card
                 const card = document.createElement('div');
                 card.className = 'supply-card';
-                // Add click event for expansion (ignoring buttons)
                 card.onclick = function(e) {
                     if(e.target.tagName !== 'BUTTON') {
                         const details = this.querySelector('.batch-details');
@@ -356,7 +431,6 @@ if (supplierForm) {
 
                 card.innerHTML = `
                     <button class="btn-close-card" onclick="openActionModal(${batch.id})">&times;</button>
-
                     <div class="card-main-row">
                         <div class="card-left">
                             <div class="supply-number">#${batch.supplyNumber}</div>
@@ -373,7 +447,6 @@ if (supplierForm) {
                             </button>
                         </div>
                     </div>
-
                     <div class="batch-details">
                         ${detailsHtml}
                     </div>
@@ -383,69 +456,55 @@ if (supplierForm) {
         }
     }
 
-    // --- E. Action Modal (Update/Delete) ---
+    // --- E. Action Modal ---
     window.openActionModal = function(id) {
         selectedBatchId = id;
         actionModal.classList.remove('hidden-mode');
     };
 
-    btnActionDelete.addEventListener('click', function() {
-        if (selectedBatchId) {
-            supplyData = supplyData.filter(b => b.id !== selectedBatchId);
-            localStorage.setItem('floodSupplyBatches', JSON.stringify(supplyData));
-            renderSupplyHistory();
-            actionModal.classList.add('hidden-mode');
-            selectedBatchId = null;
-        }
-    });
-
-// --- FIXED UPDATE BUTTON LOGIC ---
-    btnActionUpdate.addEventListener('click', function() {
-        if (selectedBatchId) {
-            // Fix: Ensure we compare IDs loosely (==) just in case one is a string
-            const batch = supplyData.find(b => b.id == selectedBatchId);
-            
-            if (batch) {
-                // 1. Switch to "Make Contribution" Tab manually
-                const tab = document.querySelector('[data-target="make-contribution"]');
-                if(tab) tab.click();
-
-                // 2. Set the Editing ID so the form knows we are updating
-                editingBatchId = batch.id;
-                
-                // 3. Clear existing form rows
-                if(itemsContainer) itemsContainer.innerHTML = '';
-
-                // 4. Fill the Form with the Batch Data
-                // Fill Category
-                const catInput = document.getElementById('batch-category');
-                // Note: Since we moved category to rows, we just ignore the main dropdown 
-                // or let the first row set the precedent.
-                
-                // Fill Rows
-                batch.items.forEach(item => {
-                    // Use the helper to add rows with data
-                    addFormRow(item.name, item.qty, item.category);
-                });
-
-                // 5. Close the Modal
+    if(btnActionDelete) {
+        btnActionDelete.addEventListener('click', function() {
+            if (selectedBatchId) {
+                supplyData = supplyData.filter(b => b.id !== selectedBatchId);
+                localStorage.setItem('floodSupplyBatches', JSON.stringify(supplyData));
+                renderSupplyHistory();
                 actionModal.classList.add('hidden-mode');
                 selectedBatchId = null;
-                
-                // 6. Scroll to top so user sees the form
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                
-                // 7. Visual Feedback
-                alert("Record loaded for editing. Make your changes and click 'Submit Supply List'.");
-            } else {
-                console.error("Batch not found for ID:", selectedBatchId);
             }
-        }
-    });
+        });
+    }
 
-    btnCloseAction.addEventListener('click', function() {
-        actionModal.classList.add('hidden-mode');
-    });
+    if(btnActionUpdate) {
+        btnActionUpdate.addEventListener('click', function() {
+            if (selectedBatchId) {
+                const batch = supplyData.find(b => b.id == selectedBatchId);
+                if (batch) {
+                    // Switch to "Make Contribution" Tab
+                    const tab = document.querySelector('[data-target="make-contribution"]');
+                    if(tab) tab.click();
+
+                    editingBatchId = batch.id;
+                    if(itemsContainer) itemsContainer.innerHTML = '';
+
+                    // Fill Rows
+                    batch.items.forEach(item => {
+                        addFormRow(item.name, item.qty, item.category);
+                    });
+
+                    actionModal.classList.add('hidden-mode');
+                    selectedBatchId = null;
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    alert("Record loaded for editing. Make your changes and click 'Submit Supply List'.");
+                }
+            }
+        });
+    }
+
+    if(btnCloseAction) {
+        btnCloseAction.addEventListener('click', function() {
+            actionModal.classList.add('hidden-mode');
+        });
+    }
 
     // --- F. Transport & QR ---
     window.handleTransportClick = function(id) {
@@ -473,3 +532,72 @@ if (supplierForm) {
         });
     }
 });
+
+// =========================================
+// 4. HELPER FUNCTIONS (Must be outside DOMContentLoaded)
+// =========================================
+
+function createPopup() {
+    const modal = document.createElement('div');
+    modal.id = 'languageModal';
+    modal.className = 'lang-modal';
+    modal.innerHTML = `
+        <div class="lang-content">
+            <h2 style="margin-bottom:20px;">
+                Select Language<br>
+                <span style="font-family: 'Noto Sans Sinhala', sans-serif; font-size:0.8em; color:#ccc;">භාෂාව තෝරන්න </span><br>
+                <span style="font-size:0.8em; color:#ccc;">மொழியைத் தேர்ந்தெடுக்கவும்</span>
+            </h2>
+            <button class="lang-btn btn-en" onclick="setLanguage('en')">English</button>
+            <button class="lang-btn btn-si" onclick="setLanguage('si')"><span style="font-family: 'Yaldevi', 'Noto Sans Sinhala', sans-serif;">සිංහල</span></button>
+            <button class="lang-btn btn-ta" onclick="setLanguage('ta')">தமிழ்</button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+function setLanguage(lang) {
+    const body = document.body;
+    body.classList.remove('sinhala-mode');
+    body.classList.remove('tamil-mode');
+
+    if (lang === 'si') {
+        body.classList.add('sinhala-mode');
+        localStorage.setItem('siteLang', 'si');
+    } else if (lang === 'ta') {
+        body.classList.add('tamil-mode');
+        localStorage.setItem('siteLang', 'ta');
+    } else {
+        localStorage.setItem('siteLang', 'en');
+    }
+    const modal = document.getElementById('languageModal');
+    if (modal) modal.remove();
+}
+
+function injectFooter() {
+    const footerContainer = document.getElementById('dynamic-footer');
+    if (footerContainer) {
+        footerContainer.innerHTML = `
+        <footer>
+            <div class="footer-container">
+                <div class="footer-section">
+                    <h3>
+                        <span class="lang-en">Contact Us</span>
+                        <span class="lang-si">අප අමතන්න</span>
+                        <span class="lang-ta">தொடர்பு கொள்ள</span>
+                    </h3>
+                    <p>
+                        <span class="lang-en">System Headquarters</span>
+                        <span class="lang-si">පද්ධති මූලස්ථානය</span>
+                        <span class="lang-ta">தலைமையகம்</span>
+                    </p>
+                    <p>chamath.24@cse.mrt.ac.lk</p>
+                    <p class="emergency-number">+94 78 5200024</p>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 Flood Management System. All Rights Reserved.
+            </div>
+        </footer>`;
+    }
+}
