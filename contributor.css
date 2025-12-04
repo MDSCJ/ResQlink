@@ -1,0 +1,470 @@
+/* --- contributor.css (FINAL COMPLETE VERSION) --- */
+
+/* =========================================
+   1. PAGE LAYOUT & SIDEBAR
+   ========================================= */
+/* --- FIXED LAYOUT WRAPPER --- */
+.page-container {
+    display: flex;
+    width: 100%;
+    /* Fix: Ensure it fills at least the full screen height minus header */
+    min-height: calc(100vh - 60px); 
+    position: relative;
+    align-items: flex-start;
+    /* Fix: Ensure background covers everything without repeating lines */
+    background: linear-gradient(to bottom, #00111a, #00334d);
+    background-attachment: fixed; /* This keeps the blue gradient smooth while scrolling */
+    background-size: cover;
+}
+
+.sidebar {
+    width: 260px;
+    min-width: 260px;
+    background-color: #002633;
+    border-right: 2px solid #004d66;
+    color: white;
+    /* Sticky Logic */
+    position: -webkit-sticky;
+    position: sticky;
+    top: 60px; /* Sticks below navbar */
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.sidebar-header {
+    padding: 20px;
+    background: #004d66;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+    border-bottom: 1px solid #006080;
+}
+
+.sidebar-menu { list-style: none; padding: 0; }
+
+.sidebar-link {
+    display: flex; align-items: center;
+    padding: 15px 20px;
+    color: #b3e0ff; text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: background 0.2s; cursor: pointer;
+}
+
+.sidebar-link i { margin-right: 15px; width: 20px; text-align: center; }
+
+.sidebar-link:hover, .sidebar-link.active-side {
+    background-color: #006080; color: #fff;
+    border-left: 5px solid #00d2ff;
+}
+
+/* =========================================
+   2. CONTENT AREA & TABS
+   ========================================= */
+.content-area {
+    flex-grow: 1;
+    padding: 40px;
+    min-width: 0; /* Prevents flex overflow issues */
+}
+
+/* Tab Switching Logic */
+.content-section {
+    display: none;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 30px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.content-section.active-section { display: block; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.section-title {
+    color: #00d2ff;
+    border-bottom: 2px solid #004d66;
+    padding-bottom: 10px; margin-bottom: 20px;
+    font-size: 1.8rem;
+}
+
+/* =========================================
+   3. NAVIGATION FIX (Right Align)
+   ========================================= */
+/* This forces the menu links in the main header to the right */
+nav .nav-links {
+    margin-left: auto;
+    display: flex;
+}
+
+/* =========================================
+   4. SUPPLIER DETAILS (VIEW MODE)
+   ========================================= */
+.supplier-header {
+    display: flex; align-items: center; gap: 25px;
+    position: relative; margin-bottom: 20px; height: 120px;
+}
+
+/* Profile Photo Stabilizer */
+.supplier-profile-img {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background-color: #002633; /* Fallback color */
+    flex-shrink: 0;
+}
+
+.supplier-profile-img img {
+    width: 100%; height: 100%;
+    border-radius: 50%; object-fit: cover;
+    border: 3px solid #00d2ff;
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+    display: block;
+}
+
+.supplier-info {
+    display: flex; flex-direction: column; justify-content: center;
+    height: 120px; max-width: 600px;
+}
+.supplier-info h3 { margin: 0 0 10px 0; color: white; font-size: 1.5rem; }
+.supplier-info p { margin: 0; color: #ccc; font-size: 0.95rem; line-height: 1.4; overflow: hidden; }
+
+/* Edit Pen Button */
+.edit-icon-btn {
+    position: absolute; top: 0; right: 0;
+    background: transparent; border: 1px solid #00d2ff; color: #00d2ff;
+    width: 40px; height: 40px; border-radius: 50%;
+    cursor: pointer; transition: 0.3s; z-index: 100;
+}
+.edit-icon-btn:hover { background: #00d2ff; color: #000; }
+
+.supplier-divider {
+    border: 0; height: 1px;
+    background: linear-gradient(to right, transparent, #004d66, transparent);
+    margin: 30px 0;
+}
+
+/* Gallery Grid */
+.supplier-gallery {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+/* Gallery Item Stabilizer */
+.gallery-item {
+    position: relative;
+    height: 150px; /* Forces box open */
+    width: 100%;
+    background-color: #002633; /* Dark card background */
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+    overflow: hidden;
+}
+
+.gallery-item img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    transition: transform 0.3s;
+}
+.gallery-item:hover { border-color: #00d2ff; }
+.gallery-item:hover img { transform: scale(1.05); }
+
+/* Delete Button (Red X) */
+.delete-btn {
+    position: absolute; top: 5px; right: 5px;
+    background-color: #ff0000; color: white;
+    border: none; border-radius: 50%;
+    width: 25px; height: 25px;
+    font-size: 14px; font-weight: bold;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0.8; z-index: 10;
+    transition: 0.2s;
+}
+.delete-btn:hover { opacity: 1; transform: scale(1.1); }
+
+/* =========================================
+   5. SUPPLIER DETAILS (EDIT MODE / FORMS)
+   ========================================= */
+.hidden-mode { display: none !important; }
+
+.edit-mode-title { color: #ffcc00; margin-bottom: 20px; }
+
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; color: #00d2ff; margin-bottom: 8px; }
+
+.form-input {
+    width: 100%; padding: 10px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid #004d66;
+    color: white; border-radius: 5px;
+}
+
+.small-hint { font-size: 0.8rem; color: #777; margin-top: 5px; }
+
+.form-actions { display: flex; gap: 15px; margin-top: 30px; }
+.right-align { justify-content: flex-end; }
+
+.btn-save {
+    background: #28a745; color: white;
+    padding: 10px 20px; border: none; border-radius: 5px;
+    cursor: pointer; font-weight: bold;
+}
+.btn-cancel {
+    background: #dc3545; color: white;
+    padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;
+}
+
+/* =========================================
+   6. MAKE SUPPLY (DYNAMIC ROWS)
+   ========================================= */
+.item-row {
+    display: flex; gap: 15px; align-items: flex-end;
+    background: rgba(0,0,0,0.2);
+    padding: 15px; border-radius: 10px; margin-bottom: 15px;
+    border: 1px solid rgba(255,255,255,0.05);
+    animation: fadeIn 0.3s;
+}
+
+.input-group { flex: 1; }
+.input-group label { font-size: 0.85rem; color: #ccc; }
+
+.btn-remove-item {
+    background: #ff4444; color: white;
+    border: none; width: 35px; height: 35px; border-radius: 5px;
+    font-size: 20px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 2px;
+}
+.btn-remove-item:hover { background: #cc0000; }
+
+.add-more-wrapper { margin-bottom: 20px; }
+#btn-add-row {
+    background: transparent; border: 1px dashed #00d2ff; color: #00d2ff;
+    padding: 10px 20px; border-radius: 30px;
+    cursor: pointer; font-size: 0.9rem; width: 100%;
+    transition: 0.3s;
+}
+#btn-add-row:hover { background: rgba(0, 210, 255, 0.1); }
+
+/* =========================================
+   7. SUPPLY HISTORY (CURVED CARDS)
+   ========================================= */
+.supply-card {
+    background: linear-gradient(135deg, #00334d, #001f33);
+    border-radius: 20px;
+    padding: 25px; margin-bottom: 20px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-left: 5px solid #00d2ff;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: transform 0.2s;
+}
+.supply-card:hover { transform: translateY(-3px); }
+
+.card-left { display: flex; align-items: center; gap: 20px; }
+.supply-number { font-size: 2.5rem; font-weight: bold; color: rgba(255,255,255,0.1); }
+.supply-details h4 { margin: 0; color: #fff; font-size: 1.2rem; }
+.supply-details p { margin: 5px 0 0; color: #aaa; font-size: 0.9rem; }
+
+.card-right { text-align: right; }
+.status-text {
+    display: block; font-size: 0.8rem;
+    color: #ffcc00; margin-bottom: 10px;
+    text-transform: uppercase; letter-spacing: 1px;
+}
+.status-text.verified { color: #00d2ff; }
+
+.btn-confirm-transport {
+    background: #00d2ff; color: #002633;
+    border: none; padding: 10px 20px; border-radius: 25px;
+    font-weight: bold; cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 210, 255, 0.4);
+    transition: 0.3s;
+}
+.btn-confirm-transport:hover { background: #fff; box-shadow: 0 0 20px rgba(255,255,255, 0.6); }
+
+.btn-confirm-transport.unverified-btn {
+    background: transparent; border: 2px solid #00d2ff;
+    color: #00d2ff; box-shadow: none;
+}
+
+/* =========================================
+   8. QR MODAL POPUP
+   ========================================= */
+.qr-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9); z-index: 9999;
+    display: flex; justify-content: center; align-items: center;
+    backdrop-filter: blur(8px);
+}
+.qr-box {
+    background: linear-gradient(135deg, #004d66, #002633);
+    padding: 40px; border-radius: 30px;
+    border: 1px solid #00d2ff;
+    box-shadow: 0 0 40px rgba(0, 210, 255, 0.3);
+    position: relative; max-width: 700px; width: 90%;
+    animation: popIn 0.4s ease;
+}
+@keyframes popIn { from{transform: scale(0.8); opacity:0;} to{transform: scale(1); opacity:1;} }
+
+.qr-content-wrapper { display: flex; gap: 40px; align-items: center; }
+.qr-text-side { flex: 1; text-align: right; border-right: 1px solid rgba(255,255,255,0.1); padding-right: 40px; }
+.qr-text-side h2 { margin: 0; color: #fff; font-size: 2rem; line-height: 1.2; }
+.qr-text-side p { color: #00d2ff; font-size: 1.2rem; margin-top: 10px; }
+.qr-hint { margin-top: 20px; font-size: 0.8rem; color: #888; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; }
+
+.qr-image-side { flex: 0 0 200px; }
+.qr-image-side img { width: 200px; height: 200px; border-radius: 10px; border: 5px solid white; }
+
+.qr-close-btn {
+    position: absolute; top: 20px; right: 20px;
+    background: transparent; border: none; color: #777;
+    font-size: 30px; cursor: pointer;
+}
+.qr-close-btn:hover { color: white; }
+
+/* =========================================
+   9. MOBILE RESPONSIVE
+   ========================================= */
+@media (max-width: 768px) {
+    .page-container { flex-direction: column; }
+    .sidebar { width: 100%; height: auto; position: static; }
+    .content-area { padding: 20px; width: 100%; margin-left: 0; }
+    
+    .supplier-header { flex-direction: column; height: auto; text-align: center; }
+    .supplier-info { height: auto; margin-top: 15px; }
+    .supplier-gallery { grid-template-columns: repeat(2, 1fr); }
+    
+    .supply-card { flex-direction: column; align-items: flex-start; gap: 15px; }
+    .card-right { width: 100%; text-align: left; padding-top: 15px; border-top: 1px dashed rgba(255,255,255,0.1); }
+    
+    .qr-content-wrapper { flex-direction: column-reverse; text-align: center; }
+    .qr-text-side { text-align: center; border-right: none; padding-right: 0; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+}
+
+/* --- SUPPLY CARD CLOSE BUTTON --- */
+.supply-card {
+    position: relative; /* Needed for absolute positioning of the X button */
+}
+
+.btn-close-card {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 30px;
+    height: 30px;
+    background: #ff4444;
+    color: white;
+    border: 2px solid #002633; /* Matches background to look like it's floating */
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    transition: transform 0.2s;
+    z-index: 5;
+}
+
+.btn-close-card:hover {
+    background: #cc0000;
+    transform: scale(1.1);
+}
+
+/* --- UPDATED FORM ROW (3 Columns) --- */
+.item-row {
+    display: grid;
+    /* Category (Large) | Name (Large) | Qty (Small) | Delete (Tiny) */
+    grid-template-columns: 1.5fr 1.5fr 0.8fr auto; 
+    gap: 15px;
+    align-items: end;
+    background: rgba(0,0,0,0.2);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(255,255,255,0.05);
+    animation: fadeIn 0.3s;
+}
+
+/* --- HISTORY CARD EXPANSION --- */
+.supply-card {
+    cursor: pointer; /* Show it's clickable */
+    flex-direction: column; /* Allow stacking details below */
+    align-items: stretch;
+}
+
+.card-main-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* The Hidden Details Area */
+.batch-details {
+    display: none; /* Hidden by default */
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px dashed rgba(255,255,255,0.1);
+    animation: slideDown 0.3s ease-out;
+}
+
+.batch-details.open {
+    display: block;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Grouping Headers inside Details */
+.detail-group { margin-bottom: 15px; }
+
+.detail-header {
+    font-size: 0.9rem;
+    color: #00d2ff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 10px;
+}
+
+.detail-list {
+    list-style: none;
+    padding-left: 10px;
+    border-left: 2px solid #555;
+}
+
+.detail-list li {
+    font-size: 0.95rem;
+    color: #ddd;
+    padding: 3px 0;
+}
+
+.detail-list li span {
+    color: #888;
+    font-size: 0.85rem;
+    margin-left: 10px;
+}
+
+/* Mobile Fix for 3-Column Form */
+@media (max-width: 768px) {
+    .item-row {
+        grid-template-columns: 1fr; /* Stack vertically */
+        gap: 10px;
+    }
+    .btn-remove-item { width: 100%; margin-top: 5px; }
+}
+
+/* Fix for Edit Pencil Icon Z-Index */
+.edit-icon-btn {
+    z-index: 500 !important; /* Forces it to sit on top of everything */
+    background-color: rgba(0, 38, 51, 0.8); /* Adds a small backing so it's easier to see */
+}

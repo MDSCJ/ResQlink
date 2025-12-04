@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Map - Flood Management System</title>
+    
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+</head>
+<body>
+
+    <header class="header-banner-container">
+        <img src="header.jpg" alt="Flood Management System Banner" class="actual-header-image">
+    </header>
+
+    <nav>
+        <div class="dropdown">
+            <button class="dropbtn">
+                <span class="lang-en">⚠️ Essential Links ▼</span>
+                <span class="lang-si">⚠️ අත්‍යවශ්‍ය සබැඳි ▼</span>
+                <span class="lang-ta">⚠️ அத்தியாவசிய இணைப்புகள் ▼</span>
+            </button>
+            <div class="dropdown-content">
+                <a href="https://www.meteo.gov.lk" target="_blank">
+                    <span class="lang-en">Meteorology Dept (Met)</span>
+                    <span class="lang-si">කාලගුණ විද්‍යා දෙපාර්තමේන්තුව</span>
+                    <span class="lang-ta">வளிமண்டலவியல் திணைக்களம்</span>
+                </a>
+                <a href="http://www.dmc.gov.lk" target="_blank">
+                    <span class="lang-en">Disaster Management Center</span>
+                    <span class="lang-si">ආපදා කළමනාකරණ මධ්‍යස්ථානය</span>
+                    <span class="lang-ta">அனர்த்த முகாமைத்துவ நிலையம்</span>
+                </a>
+                <a href="http://www.irrigation.gov.lk" target="_blank">
+                    <span class="lang-en">Irrigation Dept</span>
+                    <span class="lang-si">වාරිමාර්ග දෙපාර්තමේන්තුව</span>
+                    <span class="lang-ta">நீர்ப்பாசனத் திணைக்களம்</span>
+                </a>
+                <a href="https://www.redcross.lk" target="_blank">
+                    <span class="lang-en">Sri Lanka Red Cross</span>
+                    <span class="lang-si">ශ්‍රී ලංකා රතු කුරුස සමාජය</span>
+                    <span class="lang-ta">இலங்கை செஞ்சிலுவைச் சங்கம்</span>
+                </a>
+                <a href="https://floodsupport.org/" target="_blank">
+                    <span class="lang-en">Flood Support</span>
+                    <span class="lang-si">ගංවතුර සහන</span>
+                    <span class="lang-ta">வெள்ள நிவாரணம்</span>
+                </a>
+            </div>
+        </div>
+
+        <ul class="nav-links">
+            
+            <li>
+                <a href="index.html">
+                    <span class="lang-en">Home</span>
+                    <span class="lang-si">මුල් පිටුව</span>
+                    <span class="lang-ta">முகப்பு</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="datamap.html" class="active">
+                    <span class="lang-en">Data Map</span>
+                    <span class="lang-si">දත්ත සිතියම</span>
+                    <span class="lang-ta">தரவு வரைபடம்</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="contributor.html">
+                    <span class="lang-en">Contributor</span>
+                    <span class="lang-si">දායකයා</span>
+                    <span class="lang-ta">பங்களிப்பாளர்</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="distributer.html" >
+                    <span class="lang-en">Distributerer</span>
+                    <span class="lang-si">බෙදාහරින්නා</span>
+                    <span class="lang-ta">பயணி</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="victim.html">
+                    <span class="lang-en">Victim</span>
+                    <span class="lang-si">විපතට පත් අය</span>
+                    <span class="lang-ta">பாதிக்கப்பட்டவர்</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="admin.html">
+                    <span class="lang-en">Admin</span>
+                    <span class="lang-si">පරිපාලක</span>
+                    <span class="lang-ta">நிர்வாகம்</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="about.html" >
+                    <span class="lang-en">About</span>
+                    <span class="lang-si">අප ගැන</span>
+                    <span class="lang-ta">எங்களைப் பற்றி</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="localStorage.removeItem('siteLang'); location.reload();" style="color: #ffcc00; font-weight: bold;">
+                    <span class="lang-en">🌐 Lang</span>
+                    <span class="lang-si">🌐 භාෂාව</span>
+                    <span class="lang-ta">🌐 மொழி</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="map-actions">
+        <a href="contributor.html" class="action-btn btn-contributor">
+            <span class="lang-en">Become a Contributor</span>
+            <span class="lang-si">දායකයෙකු වන්න</span>
+            <span class="lang-ta">பங்களிப்பாளராக மாறுங்கள்</span>
+        </a>
+
+        <a href="traveler.html" class="action-btn btn-distributor">
+            <span class="lang-en">Become a Distributor</span>
+            <span class="lang-si">බෙදාහරින්නෙකු වන්න</span>
+            <span class="lang-ta">விநியோகிப்பாளராக மாறுங்கள்</span>
+        </a>
+
+        <a href="victim.html" class="action-btn btn-victim">
+            <span class="lang-en">I'm a Victim (Help)</span>
+            <span class="lang-si">මම විපතට පත්වූවෙක්මි</span>
+            <span class="lang-ta">நான் பாதிக்கப்பட்டவன்</span>
+        </a>
+    </div>
+
+    <main style="padding: 0;"> <div id="map"></div>
+    </main>
+
+    <div id="dynamic-footer"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <script src="script.js"></script>
+    
+    <script src="datamap.js"></script>
+
+</body>
+</html>
